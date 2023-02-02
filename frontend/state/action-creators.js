@@ -31,8 +31,8 @@ export function setQuiz() {
   // return { type: SET_QUIZ_INTO_STATE, payload: }
 }
 
-export function inputChange() { 
-  return { type: INPUT_CHANGE }
+export function inputChange(evt) { 
+  return { type: INPUT_CHANGE, payload: evt.target }
 }
 
 export function resetForm() { 
@@ -64,11 +64,11 @@ export function postAnswer(answer) {
     // - Dispatch the fetching of the next quiz
   }
 }
-export function postQuiz() {
+export function postQuiz(quiz) {
   return function (dispatch) {
     axios.post('http://localhost:9000/api/quiz/new', quiz)
-      .then(({data}) => dispatch({ type: SET_INFO_MESSAGE, payload: `Congrats: ${quiz.question_text} is a great question!` }))
-      .catch(err => dispatch({ type: SET_INFO_MESSAGE, payload: 'ERROR POSTING NEW QUIZ' }))
+      .then(({data}) => dispatch({ type: SET_INFO_MESSAGE, payload: `Congrats: "${quiz.question_text}" is a great question!` }))
+      .catch(() => dispatch({ type: SET_INFO_MESSAGE, payload: 'ERROR POSTING NEW QUIZ' }))
     // On successful POST:
     // - Dispatch the correct message to the the appropriate state
     // - Dispatch the resetting of the form
