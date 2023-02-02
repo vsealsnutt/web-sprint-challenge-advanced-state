@@ -27,8 +27,8 @@ export function setMessage(message) {
   return { type: SET_INFO_MESSAGE, payload: message }
 }
 
-export function setQuiz(data) { 
-  return { type: SET_QUIZ_INTO_STATE, payload: data }
+export function setQuiz() { 
+  // return { type: SET_QUIZ_INTO_STATE, payload: }
 }
 
 export function inputChange() { 
@@ -42,10 +42,10 @@ export function resetForm() {
 // ❗ Async action creators
 export function fetchQuiz() {
   return function (dispatch) {
-    dispatch(setQuiz());
+    dispatch({ type: SET_QUIZ_INTO_STATE });
     axios.get('http://localhost:9000/api/quiz/next')
       .then(({data}) => {
-        dispatch(setQuiz());
+        dispatch({ type: SET_QUIZ_INTO_STATE, payload: data });
       })
     // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
     // On successful GET:
@@ -55,8 +55,9 @@ export function fetchQuiz() {
 export function postAnswer(answer) {
   return function (dispatch) {
     axios.post('http://localhost:9000/api/quiz/answer', answer)
-      .then()
-      .then()
+      .then(({data}) => dispatch({ type: SET_INFO_MESSAGE, payload: data.message }))
+      .then(res => dispatch({ type: SET_QUIZ_INTO_STATE }))
+      .catch(err => dispatch({ type:SET_INFO_MESSAGE, payload: err }))
     // On successful POST:
     // - Dispatch an action to reset the selected answer state
     // - Dispatch an action to set the server message to state
@@ -65,6 +66,9 @@ export function postAnswer(answer) {
 }
 export function postQuiz() {
   return function (dispatch) {
+    axios.post('http://localhost:9000/api/quiz/new', quiz)
+      .then(({data}) => dispatch({ type: SET_INFO_MESSAGE, payload: `Congrats: ${quiz.question_text} is a great question!` }))
+      .catch(err => dispatch({ type: SET_INFO_MESSAGE, payload: 'ERROR POSTING NEW QUIZ' }))
     // On successful POST:
     // - Dispatch the correct message to the the appropriate state
     // - Dispatch the resetting of the form

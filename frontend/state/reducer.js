@@ -13,18 +13,18 @@ import { combineReducers } from 'redux'
 
 const initialWheelState = 0
 function wheel(state = initialWheelState, action) {
-  switch(action.type) {
+  switch (action.type) {
     case MOVE_CLOCKWISE:
       if (state === 5) {
-        return state = initialWheelState;
+        return (state = initialWheelState);
       } else {
-        return state + 1;
+        return (state + 1);
       }
     case MOVE_COUNTERCLOCKWISE:
       if (state === 0) {
-        return state = 5;
+        return (state = 5);
       } else {
-        return state - 1;
+        return (state - 1);
       }
     default:
       return state;
@@ -33,17 +33,42 @@ function wheel(state = initialWheelState, action) {
 
 const initialQuizState = null
 function quiz(state = initialQuizState, action) {
-  return state
+  switch (action.type) {
+    case SET_QUIZ_INTO_STATE:
+      if (action.payload === undefined) {
+        return (state = initialQuizState);
+      } else {
+          if (action.payload) {
+            return (state = action.payload)
+          }
+        }
+    default:
+      return state;
+  }
 }
 
 const initialSelectedAnswerState = null
 function selectedAnswer(state = initialSelectedAnswerState, action) {
-  return state
+  switch (action.type) {
+    case SET_SELECTED_ANSWER:
+      return (state = action.payload);
+    default:
+      return state;
+  }
 }
 
 const initialMessageState = ''
 function infoMessage(state = initialMessageState, action) {
-  return state
+  switch (action.type) {
+    case SET_INFO_MESSAGE:
+      if (action.payload === undefined) {
+        return (state = initialMessageState);
+      } else {
+          return (state = action.payload);
+        }
+    default:
+      return state;
+  }
 }
 
 const initialFormState = {
